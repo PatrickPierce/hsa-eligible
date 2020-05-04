@@ -27,21 +27,21 @@ def search_fuzzy(account, product, product_list):
     search_complete = False
     while not search_complete:
         for item in items:
-            for k, v in product_list.items():
-                ratio = fuzz.token_sort_ratio(item, k)
+            for product_name, account_type in product_list.items():
+                ratio = fuzz.token_sort_ratio(item, product_name)
 
                 if ratio >= 70:
                     missing_item = False
-                    return_results[k] = v
+                    return_results[product_name] = account_type
 
                     if ratio < 100:
-                        print(f"Similar product: {k.capitalize()}")
-                        print(f"{account}: {v}\n")
-                        return_results[k] = v
+                        print(f"Similar product: {product_name.capitalize()}")
+                        print(f"{account}: {account_type}\n")
+                        return_results[product_name] = account_type
                     elif ratio == 100:
-                        print(f"Product: {k.capitalize()}")
-                        print(f"{account}: {v}\n")
-                        return_results[k] = v
+                        print(f"Product: {product_name.capitalize()}")
+                        print(f"{account}: {account_type}\n")
+                        return_results[product_name] = account_type
                         """
                         Stops search once product is found
                         May change this to be optional
