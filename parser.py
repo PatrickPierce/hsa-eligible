@@ -16,9 +16,11 @@ def get_args():
 
         if product is not None:
             product = " ".join(product)
-            if not product.isalpha():
-                print("Product name should not include numbers. \nExiting.")
-                sys.exit()
+
+            # TODO: Alphanumeric check breaks if product name contains a space
+            # if not product.isalpha():
+            #     print("Product name should not include numbers. \nExiting.")
+            #     sys.exit()
 
         if status is not None:
             status = " ".join(status)
