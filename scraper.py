@@ -45,9 +45,9 @@ class Scraper:
                 "HRA": '//option[@value="5"]',
             }
 
-            for k, v in account_options.items():
-                if account == k:
-                    account_value = self.driver.find_element_by_xpath(v)
+            for account_type, option_value in account_options.items():
+                if account == account_type:
+                    account_value = self.driver.find_element_by_xpath(option_value)
                     break
 
             return account_value
@@ -86,9 +86,9 @@ class Scraper:
                     "expenseTypeLabelIndicator"
                 ).get_attribute("class")[26:]
 
-                for k, v in eligibilities.items():
-                    if product_status == k:
-                        eligibility = v
+                for brand, eligible in eligibilities.items():
+                    if product_status == brand:
+                        eligibility = eligible
 
                 return eligibility
 
@@ -141,6 +141,16 @@ class Scraper:
         Check products for the given account type and eligibility status
         """
 
+        def save_data():
+            filename = f"{account}_eligible.txt".lower()
+            with open(filename, "w") as f:
+                for product_name, product_status in product_list.items():
+                    if product_status == status:
+                        f.write(f"Product: {product_name.upper()}\n")
+                        f.write(f"Status: {product_status}\n\n")
+
+            return filename
+
         page_indexes = list(string.ascii_lowercase)
         product_list = {}
         for url_index in page_indexes:
@@ -148,12 +158,7 @@ class Scraper:
             self.click_account(account)
             product_list.update(self.scrape_data())
 
-        filename = f"{account}_eligible.txt".lower()
-        with open(filename, "w") as f:
-            for k, v in product_list.items():
-                if v == status:
-                    f.write(f"Product: {k.upper()}\n")
-                    f.write(f"Status: {v}\n\n")
+        filename = save_data()
         print(f"List too big")
         print(f"Saved to {os.path.abspath(filename)}")
 
